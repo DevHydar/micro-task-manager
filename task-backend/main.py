@@ -232,15 +232,19 @@ def get_tasks(
 def update_task(
     task_id: int,
     completed: bool,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
 ):
-
     task = db.query(models.Task).filter(
-        models.Task.id == task_id
+        models.Task.id == task_id,
+        models.Task.user_id == current_user.id
     ).first()
 
     if not task:
-        return {"error": "Task not found"}
+        raise HTTPException(
+            status_code=404,
+            detail="Task not found"
+        )
 
     task.completed = completed
 
@@ -253,19 +257,21 @@ def update_task(
 @app.delete("/tasks/{task_id}")
 def delete_task(
     task_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
 ):
-
     task = db.query(models.Task).filter(
-        models.Task.id == task_id
+        models.Task.id == task_id,
+        models.Task.user_id == current_user.id
     ).first()
 
     if not task:
-        return {"error": "Task not found"}
+        raise HTTPException(
+            status_code=404,
+            detail="Task not found"
+        )
 
     db.delete(task)
     db.commit()
 
-    return {
-        "message": "Task deleted successfully"
-    }
+    return {"message": "Task deleted successfully"}
