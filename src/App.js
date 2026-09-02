@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import TaskList from "./components/TaskList";
 import TaskForm from "./components/TaskForm";
-
+import Navbar from "./components/layout/Navbar";
 function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -123,8 +123,17 @@ const deleteTask = (taskId) => {
       console.error("Could not delete task:", error);
     });
 };
+const logout = () => {
+  setToken("");
+  setTasks([]);
+};
+return (
+  <div>
+    <Navbar 
+    token={token}
+  onLogout={logout}
+  />
 
-    return (
     <div
       style={{
         maxWidth: "600px",
@@ -153,7 +162,7 @@ const deleteTask = (taskId) => {
           />
 
           <button onClick={login}>Login</button>
-        </div>
+       </div>
       ) : (
         <div>
           <h2>Welcome, {username} 👋</h2>
@@ -167,7 +176,8 @@ const deleteTask = (taskId) => {
           />
         </div>
       )}
-    </div>
+       </div>
+  </div>
   );
 }
 
