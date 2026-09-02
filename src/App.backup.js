@@ -59,31 +59,32 @@ function App() {
       fetchTasks(token);
     }
   }, [token]);
-  // ADD TASK
-  const addTask = (taskTitle) => {
-    if (taskTitle.trim() === "") return;
 
-    axios
-      .post(
-        `http://127.0.0.1:8000/tasks?title=${encodeURIComponent(taskTitle)}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        setTasks((currentTasks) => [
-          ...currentTasks,
-          response.data,
-        ]);
-      })
-      .catch((error) => {
-        console.error("Could not add task:", error);
-      });
-  };
-    const toggleTask = (task) => {
+  // ADD TASK
+const addTask = (taskTitle) => {
+  if (taskTitle.trim() === "") return;
+
+  axios
+    .post(
+      `http://127.0.0.1:8000/tasks?title=${encodeURIComponent(taskTitle)}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then((response) => {
+      setTasks((currentTasks) => [
+        ...currentTasks,
+        response.data,
+      ]);
+    })
+    .catch((error) => {
+      console.error("Could not add task:", error);
+    });
+};
+};  const toggleTask = (task) => {
   axios
     .put(
       `http://127.0.0.1:8000/tasks/${task.id}?completed=${!task.completed}`,
@@ -124,7 +125,7 @@ const deleteTask = (taskId) => {
     });
 };
 
-    return (
+  return (
     <div
       style={{
         maxWidth: "600px",
@@ -153,22 +154,19 @@ const deleteTask = (taskId) => {
           />
 
           <button onClick={login}>Login</button>
-        </div>
-      ) : (
-        <div>
-          <h2>Welcome, {username} 👋</h2>
+       ) : (
+) : (
+  <div>
+    <h2>Welcome, {username} 👋</h2>
 
-          <TaskForm onAddTask={addTask} />
+    <TaskForm onAddTask={addTask} />
 
-          <TaskList
-            tasks={tasks}
-            onToggle={toggleTask}
-            onDelete={deleteTask}
-          />
-        </div>
-      )}
-    </div>
-  );
-}
+    <TaskList
+      tasks={tasks}
+      onToggle={toggleTask}
+      onDelete={deleteTask}
+    />
+  </div>
+)}
 
 export default App;
