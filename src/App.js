@@ -16,24 +16,39 @@ function App() {
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  
 
   // LOGIN
- const login = () => {
+const login = () => {
+  setError("");
+  setLoading(true);
+
   loginUser(username, password)
     .then((response) => {
+      
       const accessToken = response.data.access_token;
 
       setToken(accessToken);
       setAuthToken(accessToken);
+      setLoading(false);
+      setError("");
 
       console.log("Login successful");
     })
     .catch((error) => {
-      console.error(
-        "Login failed:",
-        error.response?.data
-      );
-    });
+  console.error(
+    "Login failed:",
+    error.response?.data
+  );
+
+  setError(
+    error.response?.data?.detail ||
+    "Login failed. Please try again."
+  );
+  setLoading(false);
+});
 };
   // GET TASKS
 const fetchTasks = () => {
@@ -54,6 +69,7 @@ const fetchTasks = () => {
   // ADD TASK
 const addTask = (taskTitle) => {
   if (taskTitle.trim() === "") return;
+  setError("");
 
   createTask(taskTitle)
     .then((response) => {
@@ -61,12 +77,19 @@ const addTask = (taskTitle) => {
         ...currentTasks,
         response.data,
       ]);
+      setError("");
     })
     .catch((error) => {
-      console.error("Could not add task:", error);
-    });
+  console.error("Could not add task:", error);
+
+  setError(
+    error.response?.data?.detail ||
+    "Could not add task. Please try again."
+  );
+});
 };
   const toggleTask = (task) => {
+    setError("");
   updateTask(task.id, !task.completed)
     .then((response) => {
       setTasks((currentTasks) =>
@@ -76,21 +99,37 @@ const addTask = (taskTitle) => {
             : currentTask
         )
       );
+      setError("");
     })
     .catch((error) => {
-      console.error("Could not update task:", error);
-    });
+  console.error("Could not update task:", error);
+
+  setError(
+    error.response?.data?.detail ||
+    "Could not update task. Please try again."
+  );
+});
 };
-const deleteTask = (taskId) => {
+  const deleteTask = (taskId) => {
+  setError("");
+
   deleteTaskAPI(taskId)
     .then(() => {
       setTasks((currentTasks) =>
         currentTasks.filter((task) => task.id !== taskId)
+      
       );
+      setError("");
     })
     .catch((error) => {
-      console.error("Could not delete task:", error);
-    });
+  console.error("Could not delete task:", error);
+
+  setError(
+    error.response?.data?.detail ||
+    "Could not delete task. Please try again."
+  );
+  
+});
 };
 const logout = () => {
   setToken("");
@@ -111,27 +150,32 @@ return (
       }}
     >
       <h1>Micro Task Manager ✅</h1>
+      {error && (
+  <p>{error}</p>
+)}
 
       {!token ? (
         <div>
-          <h2>Login</h2>
+  <h2>Login</h2>
 
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+  <input
+    type="text"
+    placeholder="Username"
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+  />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+  <input
+    type="password"
+    placeholder="Password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+  />
 
-          <button onClick={login}>Login</button>
-       </div>
+  <button onClick={login} disabled={loading}>
+  {loading ? "Logging in..." : "Login"}
+</button>
+</div>
       ) : (
         <div>
           <h2>Welcome, {username} 👋</h2>
