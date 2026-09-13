@@ -61,11 +61,11 @@ const fetchTasks = () => {
     });
 };
   // FETCH TASKS AFTER LOGIN
-  useEffect(() => {
-    if (token) {
-      fetchTasks(token);
-    }
-  }, [token]);
+useEffect(() => {
+  if (token) {
+    fetchTasks();
+  }
+}, [token]);
   // ADD TASK
 const addTask = (taskTitle) => {
   if (taskTitle.trim() === "") return;

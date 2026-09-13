@@ -21,3 +21,11 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+# Python
+task-backend/venv/
+task-backend/__pycache__/
+task-backend/*.pyc
+
+# Environment variables
+.env
+task-backend/.env
