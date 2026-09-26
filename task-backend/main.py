@@ -69,7 +69,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "https://micro-task-manager-gfh8gdz3x-learn-9754.vercel.app"
+        "https://micro-task-manager-aiqpfhtow-learn-9754.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
