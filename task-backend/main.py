@@ -14,7 +14,6 @@ from fastapi.security import OAuth2PasswordBearer
 import models
 from database import engine, SessionLocal
 
-
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
 
